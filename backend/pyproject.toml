@@ -1,0 +1,45 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "yashm5002", email = "yashmuthal9@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "aioboto3>=15.5.0",
+    "alembic>=1.19.2",
+    "argon2-cffi>=25.1.0",
+    "arq>=0.28.0",
+    "email-validator>=2.3.0",
+    "fastapi>=0.141.1",
+    "faster-whisper>=1.2.1",
+    "filetype>=1.2.0",
+    "httpx>=0.28.1",
+    "mediapipe>=1.0.1",
+    "opencv-python-headless>=5.0.0.93",
+    "praat-parselmouth>=0.4.7",
+    "psycopg[binary]>=3.3.5",
+    "pydantic>=2.13.5",
+    "pydantic-settings>=2.15.0",
+    "pyjwt>=2.13.0",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "python-json-logger>=4.2.0",
+    "redis>=5.3.1",
+    "reportlab>=5.0.1",
+    "ruff>=0.16.6",
+    "scikit-learn>=1.9.0",
+    "scipy>=1.18.1",
+    "slowapi>=0.1.10",
+    "sqlalchemy>=2.0.52",
+    "uvicorn>=0.52.4",
+]
+
+[project.scripts]
+backend = "backend:main"
+
+[build-system]
+requires = ["uv_build>=0.12.10,<0.13.0"]
+build-backend = "uv_build"

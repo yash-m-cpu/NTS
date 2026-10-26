@@ -1,0 +1,96 @@
+NTS PROJECT - COMPREHENSIVE ISSUES LOG
+======================================
+Last Updated: 2026-09-07
+
+PART 1: RESOLVED ISSUES (Historical)
+--------------------------------------
+
+1. Frontend Setup & Styling
+   - Issue: Tailwind CSS not loading → unstyled HTML page.
+   - Fix: Replaced `@tailwind` directives with `@import "tailwindcss";` (Tailwind v4).
+   - Issue: Missing Dashboard UI after login.
+   - Fix: Implemented Dashboard.tsx and ProtectedLayout.tsx.
+
+2. Auth & Workspace Provisioning (403 Forbidden)
+   - Issue: Projects fetch returned 403 after login.
+   - Root Cause: No default organization was created for new users.
+   - Fix: auth_service.py now auto-provisions a Personal Workspace on registration.
+
+3. RLS Parameter Binding Crash (500 Internal Server Error)
+   - Issue: Creating a project threw psycopg.errors.SyntaxError.
+   - Root Cause: PostgreSQL does not support parameterized bindings in SET LOCAL.
+   - Fix: Use SELECT set_config('app.current_org_id', :org_id, true) instead.
+
+4. Local PostgreSQL Port Conflict
+   - Issue: ConnectionTimeout on port 5432.
+   - Fix: Remapped Docker postgres to port 5433.
+
+5. Windows Asyncio Crash
+   - Issue: ProactorEventLoop errors on Windows.
+   - Fix: asyncio.WindowsSelectorEventLoopPolicy() applied in all scripts.
+
+6. Missing S3 / MinIO Storage Bucket
+   - Issue: Uploads returned 404 from localhost:9000.
+   - Root Cause: Docker volume wipe also deleted the MinIO bucket.
+   - Fix: create_bucket.py recreates the nts-uploads bucket with CORS.
+
+7. Database Check Constraint Violations (Multiple)
+   - processing_jobs.job_type: Changed 'analysis' → 'cv_extraction'.
+   - processing_job_events.event_type: Changed 'job.queued' → 'queued',
+     'job.started' → 'started', 'analysis.completed' → 'succeeded',
+     'analysis.failed' → 'failed', 'job.failed_retry' → 'retrying',
+     'job.cancelled' → 'cancelled'.
+   - model_versions.model_family: Changed 'cv' → 'cv_extraction'.
+   - All event_type and job_type values are now aligned with DB CHECK constraints.
+
+8. Arq Background Worker Not Running
+   - Issue: Docker worker failed with "No module named uv".
+   - Fix: Changed command from `python -m uv run` to `python`.
+   - Issue: Worker executed stale code from image layer.
+   - Fix: Added volume mounts ./backend/app:/app/app and ./backend/scripts:/app/scripts.
+   - Issue: Worker silently ignored all errors due to PendingRollbackError.
+   - Root Cause: A DB error inside the handler rolled back the session, then subsequent
+     error-recording DB writes failed silently on the same session.
+   - Fix: base_worker.py now uses THREE isolated sessions: one to mark running, one
+     inside the handler, one to record success/failure. This prevents cascading failures.
+
+9. Worker: media_asset_id NULL Violation
+   - Issue: participant_tracks.media_asset_id NOT NULL was violated.
+   - Root Cause: The job was enqueued with media_asset_id=None if no asset existed.
+   - Fix: cv_extraction_worker now automatically fetches the latest MediaAsset for
+     the meeting if job.media_asset_id is not set. Raises a clear error if none found.
+
+10. Worker: ModelRegistry ImportError
+    - Issue: ImportError: cannot import name 'ModelRegistry' from models_registry.
+    - Root Cause: The model file only has ModelVersion (no ModelRegistry parent table).
+    - Fix: cv_extraction_worker.py rewritten to only use ModelVersion directly.
+
+11. Worker: model_version_id NULL Violation
+    - Issue: feature_extractions.model_version_id NOT NULL was violated.
+    - Fix: Worker now auto-creates a placeholder ModelVersion if none exists in DB.
+
+12. Frontend: job_id not captured from API response
+    - Issue: After clicking Analyze, no job status badge appeared.
+    - Root Cause: API returns {data: {job_id: ...}} but frontend read data.job_id.
+    - Fix: ProjectDetail.tsx now reads data?.data?.job_id || data?.job_id.
+
+13. Frontend Chart: Data path mismatch
+    - Issue: View Analysis showed "No feature data available".
+    - Root Cause: Charts read values.direction.yaw but DB stores values.rotation.yaw.
+    - Fix: MeetingAnalysis.tsx updated to read values.rotation.{yaw,pitch}.
+
+
+PART 2: CURRENT OUTSTANDING ISSUES
+------------------------------------
+
+None known. All critical issues have been resolved as of this update.
+
+NOTES FOR PRODUCTION
+---------------------
+- The cv_extraction_worker is in SIMULATION MODE. It sleeps 3s and generates 20
+  dummy feature records instead of running real CV analysis. To enable real CV,
+  replace the simulation block in app/workers/cv_extraction_worker.py.
+- The MinIO bucket must be recreated after Docker volume wipes. Run:
+    python -m uv run create_bucket.py
+- After restarting the backend worker, run fix_jobs.py to reset any stuck jobs:
+    python -m uv run fix_jobs.py

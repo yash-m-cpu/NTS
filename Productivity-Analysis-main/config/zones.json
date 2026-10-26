@@ -1,0 +1,110 @@
+[
+  {
+    "zone_id": "ZONE-DESK-01",
+    "camera_id": "CAM-01",
+    "name": "Workstation Pod 1 - Seat A",
+    "zone_type": "WORKSTATION",
+    "polygon_normalized": [
+      [
+        0.02,
+        0.35
+      ],
+      [
+        0.38,
+        0.35
+      ],
+      [
+        0.38,
+        1.0
+      ],
+      [
+        0.02,
+        1.0
+      ]
+    ],
+    "capacity": 1,
+    "area_sq_meters": null,
+    "created_at": "2026-10-17T19:50:40.788473Z"
+  },
+  {
+    "zone_id": "ZONE-DESK-02",
+    "camera_id": "CAM-01",
+    "name": "Workstation Pod 1 - Seat B",
+    "zone_type": "WORKSTATION",
+    "polygon_normalized": [
+      [
+        0.38,
+        0.35
+      ],
+      [
+        0.72,
+        0.35
+      ],
+      [
+        0.72,
+        1.0
+      ],
+      [
+        0.38,
+        1.0
+      ]
+    ],
+    "capacity": 1,
+    "area_sq_meters": null,
+    "created_at": "2026-10-17T19:50:40.789472Z"
+  },
+  {
+    "zone_id": "ZONE-CORRIDOR-MAIN",
+    "camera_id": "CAM-01",
+    "name": "Central Walkway",
+    "zone_type": "CORRIDOR",
+    "polygon_normalized": [
+      [
+        0.75,
+        0.1
+      ],
+      [
+        0.95,
+        0.1
+      ],
+      [
+        0.95,
+        0.95
+      ],
+      [
+        0.75,
+        0.95
+      ]
+    ],
+    "capacity": 5,
+    "area_sq_meters": 12.0,
+    "created_at": "2026-10-17T19:50:40.789472Z"
+  },
+  {
+    "zone_id": "ZONE-PRINTER-HUB",
+    "camera_id": "CAM-01",
+    "name": "Shared Print & Review Kiosk",
+    "zone_type": "SHARED_RESOURCE",
+    "polygon_normalized": [
+      [
+        0.05,
+        0.05
+      ],
+      [
+        0.35,
+        0.05
+      ],
+      [
+        0.35,
+        0.35
+      ],
+      [
+        0.05,
+        0.35
+      ]
+    ],
+    "capacity": 2,
+    "area_sq_meters": null,
+    "created_at": "2026-10-17T19:50:40.789472Z"
+  }
+]

@@ -1,0 +1,11 @@
+export { View01LiveCctv } from './View01LiveCctv';
+export { View02TrackDetails } from './View02TrackDetails';
+export { View03WorkflowEfficiency } from './View03WorkflowEfficiency';
+export { View04ActivityDistribution } from './View04ActivityDistribution';
+export { View05OccupancyPresence } from './View05OccupancyPresence';
+export { View06OutputEffectiveness } from './View06OutputEffectiveness';
+export { View07TeamWorkspace } from './View07TeamWorkspace';
+export { View08HistoricalComparison } from './View08HistoricalComparison';
+export { View09VideoExport } from './View09VideoExport';
+export { View10DataQuality } from './View10DataQuality';
+export { ZoneEditor } from './ZoneEditor';
